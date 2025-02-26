@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For StatefulGSMLib
+
+#######################################
+# Datatypes (KEYWORD1)
+
+StatefulGSMLib	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+
+begin	KEYWORD2
+loop	KEYWORD2
+state	KEYWORD2
+sendSMS	KEYWORD2
+getSignalStrength	KEYWORD2
+initTCP	KEYWORD2
+initUDP	KEYWORD2
+sendData	KEYWORD2
+receiveData	KEYWORD2
+closeConnection	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+SIM800L	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+
+receivedNumber	LITERAL1
+receivedMessage	LITERAL1
+sms_available	LITERAL1
+lastErrorMessage	LITERAL1
