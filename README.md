@@ -4,9 +4,7 @@ This library provides a clean, well-structured interface for controlling a SIM80
 
 ## Features
 
-- Well-organized OOP structure with clear class hierarchy
 - Robust state machine for handling various modem states
-- Error handling and recovery mechanisms
 - SMS sending and receiving capabilities
 - Network status monitoring
 - Signal strength monitoring
@@ -15,10 +13,11 @@ This library provides a clean, well-structured interface for controlling a SIM80
 
 ## Hardware Requirements
 
-- ESP32 development board
-- SIM800L GSM/GPRS module
-- SIM card with SMS capability
-- Power supply capable of providing sufficient current for the SIM800L module
+- ESP32 development board.
+- Can work with other boards. The only dependency here is the Hardware Serial instance.
+- SIM800L GSM/GPRS module. Should work with other similar modules. Scraped modules from aliexpress don't work.
+- SIM card with 2G capability. Tested in the UK (Vodafone and EE works as of 2025).
+- Power supply capable of providing sufficient current for the SIM800L module.
 
 
 ## Configuration
@@ -33,6 +32,15 @@ All pin assignments and timing parameters can be configured in `configSIM800L.h`
 // Include necessary headers
 #include "configSIM800L.h"
 #include "StatefulGSMLib.h"
+
+// Hardware configuration
+#define MODEM_RX_PIN         26  // ESP32 pin connected to SIM800L TX, must connect
+#define MODEM_TX_PIN         27  // ESP32 pin connected to SIM800L RX, must connect
+#define MODEM_RST_PIN        5   // Reset pin, set to -1 to ignore
+#define MODEM_PWRKEY_PIN     4   // Power key pin, must connect
+#define MODEM_PWR_EXT_PIN    23  // External power control, set to -1 to ignore
+#define MODEM_BAUD_RATE      9600
+
 
 // Create a hardware serial for the modem
 HardwareSerial HSerial1(1);
@@ -228,6 +236,10 @@ The SIM800L state machine goes through the following states:
 6. **INITIALIZE**: Configures SMS settings
 7. **READY**: Normal operation, handles SMS and maintains network connection
 
+
+![State Diagram](state_diagram.png)
+
+
 ## Error Recovery
 
 The library includes automatic error recovery:
@@ -239,6 +251,12 @@ The library includes automatic error recovery:
 
 
 ## Wiring
+The library instance is initialized as following:
+```cpp
+
+sim800.begin(MODEM_BAUD_RATE, MODEM_RX_PIN, MODEM_TX_PIN, MODEM_PWRKEY_PIN, MODEM_RST_PIN, MODEM_PWR_EXT_PIN);
+```
+The `MODEM_RST_PIN` and `MODEM_PWR_EXT_PIN` are optional and can be set to -1 to opt-out. It is recommened to connect the `MODEM_RST_PIN` to ensure smooth resetting. It will help to have an external MOSFET to switch On and Off the SIM800 module, in that case `MODEM_PWR_EXT_PIN` can be used to control the MOSFET.
 
 This module has been tested with [LilyGo-T-Call-SIM800](https://github.com/Xinyuan-LilyGO/LilyGo-T-Call-SIM800) that has an ESP32-Wrover connected to these pins:
 
